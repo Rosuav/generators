@@ -6,6 +6,8 @@ var client = new pg.Client(pgconfig);
 
 //Step 1: Connect. (In real-world work, this would be done just once for the app.)
 client.connect(function (err) {
+	//Don't forget to check for err everywhere. If you forget, your editor MAY
+	//notice this and warn you, but otherwise, it'll silently swallow errors.
 	if (err) throw err;
 
 	//Step 2: Submit a query.
