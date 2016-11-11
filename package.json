@@ -1,0 +1,19 @@
+{
+  "name": "generators",
+  "version": "0.0.0",
+  "description": "Experimentation with ES6 and generators",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rosuav/generators.git"
+  },
+  "author": "Chris Angelico",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Rosuav/generators/issues"
+  },
+  "homepage": "https://github.com/Rosuav/generators#readme"
+}
