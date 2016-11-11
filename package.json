@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Rosuav/generators/issues"
   },
-  "homepage": "https://github.com/Rosuav/generators#readme"
+  "homepage": "https://github.com/Rosuav/generators#readme",
+  "dependencies": {
+    "pg": "^6.1.0"
+  }
 }
