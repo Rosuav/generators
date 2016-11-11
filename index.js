@@ -12,7 +12,9 @@ function run(gen) {
 	advance();
 }
 
-//And here's how asynchronous code looks.
+//And here's how asynchronous code looks. Whenever you would have a function
+//with (err, result) parameters, pass 'next', and yield the result. You'll get
+//back the result, or have the error thrown.
 run(function*(next) {
 	//Step 1: Connect. (In real-world work, this would be done just once for the app.)
 	yield client.connect(next);
