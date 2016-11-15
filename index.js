@@ -26,6 +26,6 @@ run(function*(next) {
 	console.log(result.rows[0]);
 
 	//Step 3: Disconnect
-	yield client.end(next)
+	yield client.end(next);
 	//And no backtabbing (or backstabbing).
 });
