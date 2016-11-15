@@ -1,6 +1,7 @@
-var pg = require('pg');
-var pgconfig = require('./secret.js');
-var client = new pg.Client(pgconfig);
+"use strict";
+const pg = require('pg');
+const pgconfig = require('./secret.js');
+const client = new pg.Client(pgconfig);
 require('isomorphic-fetch');
 
 //A few movie titles to play with
@@ -10,10 +11,10 @@ const titles = ['Frozen', 'Tangled', 'Mulan', 'Aladdin'];
 
 function run(gen) {
 	function advance(err, result) {
-		var yielded = err ? gen.throw(err) : gen.next(result);
+		const yielded = err ? gen.throw(err) : gen.next(result);
 		if (yielded.done) return; //Generator has returned.
 		//Handle a yielded promise.
-		var p = yielded.value;
+		const p = yielded.value;
 		if (typeof p === 'object' && typeof p.then === 'function') {
 			//It seems to be a promise. Maybe?
 			//Assume that a falsy value won't get thrown.
@@ -30,20 +31,20 @@ run(function*(next) {
 		"title text primary key, plot text)");
 	//Populate the table, for the sake of the demo.
 	//Of course, we do this only if it doesn't already have content.
-	var count = yield client.query('select count(*) from movies');
+	const count = yield client.query('select count(*) from movies');
 	if (count.rows[0].count === '0') {
 		console.log("Seeding database...");
-		for (var title of titles)
+		for (let title of titles)
 			yield client.query('insert into movies (title) values ($1)', [title]);
 	}
 
 	//Okay, now the real work. Go through all the movies and fetch their plots.
-	var movies = yield client.query("select title from movies where plot is null");
-	for (var movie of movies.rows) {
+	const movies = yield client.query("select title from movies where plot is null");
+	for (let movie of movies.rows) {
 		console.log("Looking up", movie.title);
 		//TODO: Properly encode the query string.
-		var url = 'http://www.omdbapi.com/?t=' + movie.title;
-		var json = yield (yield fetch(url)).json();
+		const url = 'http://www.omdbapi.com/?t=' + movie.title;
+		const json = yield (yield fetch(url)).json();
 		yield client.query("update movies set plot = $1 where title = $2",
 			[json.Plot, movie.title]);
 		console.log("Plot:", json.Plot);
