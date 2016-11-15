@@ -1,6 +1,12 @@
 var pg = require('pg');
 var pgconfig = require('./secret.js');
 var client = new pg.Client(pgconfig);
+require('isomorphic-fetch');
+
+//A few movie titles to play with
+//Since I'm using a super-high-tech method of building URLs, these
+//must all be one-word titles. Have fun.
+const titles = ['Frozen', 'Tangled', 'Mulan', 'Aladdin'];
 
 function run(gen) {
 	function advance(err, result) {
@@ -18,20 +24,30 @@ function run(gen) {
 	advance();
 }
 
-//And here's how asynchronous code looks. Whenever you would have a function
-//with (err, result) parameters, pass 'next', and yield the result. You'll get
-//back the result, or have the error thrown. Alternatively, yield a Promise.
 run(function*(next) {
-	//Step 1: Connect. (In real-world work, this would be done just once for the app.)
 	yield client.connect(next);
+	yield client.query("create table if not exists movies (" +
+		"title text primary key, plot text)");
+	//Populate the table, for the sake of the demo.
+	//Of course, we do this only if it doesn't already have content.
+	var count = yield client.query('select count(*) from movies');
+	if (count.rows[0].count === '0') {
+		console.log("Seeding database...");
+		for (var title of titles)
+			yield client.query('insert into movies (title) values ($1)', [title]);
+	}
 
-	//Step 2: Submit a query.
-	result = yield client.query('select value1, value2 from demo where id = $1', [3], next);
+	//Okay, now the real work. Go through all the movies and fetch their plots.
+	var movies = yield client.query("select title from movies where plot is null");
+	for (var movie of movies.rows) {
+		console.log("Looking up", movie.title);
+		//TODO: Properly encode the query string.
+		var url = 'http://www.omdbapi.com/?t=' + movie.title;
+		var json = yield (yield fetch(url)).json();
+		yield client.query("update movies set plot = $1 where title = $2",
+			[json.Plot, movie.title]);
+		console.log("Plot:", json.Plot);
+	}
 	
-	//Print that to the console (the real guts of the program)
-	console.log(result.rows[0]);
-
-	//Step 3: Disconnect
 	yield client.end(next);
-	//And no backtabbing (or backstabbing).
 });

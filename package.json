@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Rosuav/generators#readme",
   "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
     "pg": "^6.1.0"
   }
 }
