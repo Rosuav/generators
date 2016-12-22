@@ -10,7 +10,7 @@ var client = new pg.Client(pgconfig);
 	await client.connect();
 
 	//Step 2: Submit a query.
-	result = await client.query('select value1, value2 from demo where id = $1', [3]);
+	var result = await client.query('select value1, value2 from demo where id = $1', [3]);
 	
 	//Print that to the console (the real guts of the program)
 	console.log(result.rows[0]);

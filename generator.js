@@ -26,7 +26,7 @@ run(function*(next) {
 	yield client.connect(next);
 
 	//Step 2: Submit a query.
-	result = yield client.query('select value1, value2 from demo where id = $1', [3], next);
+	var result = yield client.query('select value1, value2 from demo where id = $1', [3], next);
 	
 	//Print that to the console (the real guts of the program)
 	console.log(result.rows[0]);
