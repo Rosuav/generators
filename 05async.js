@@ -3,8 +3,8 @@ var pgconfig = require('./secret.js');
 var client = new pg.Client(pgconfig);
 
 //This is semantically similar to the generator, but requires no driver function.
-//NOTE: As of 2016, async functions are not supported by default in Node.js.
-//To run this, ensure you have Node 7.x, then run: node --harmony async.js
+//NOTE: As of 2017, not all systems support this. You'll need Node 7.x at a
+//minimum, and may also need to use the --harmony flag.
 (async function() {
 	//Step 1: Connect. (In real-world work, this would be done just once for the app.)
 	await client.connect();
