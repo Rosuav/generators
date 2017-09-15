@@ -8,7 +8,7 @@ var client = new pg.Client(pgconfig);
 
 (function() {
 	//Step 1: Connect. (In real-world work, this would be done just once for the app.)
-	client.connect().then(function (err) {
+	client.connect().then(function () {
 		//Step 2: Submit a query.
 		return client.query('select value1, value2 from demo where id = $1', [3]);
 	}).then(function (result) {
